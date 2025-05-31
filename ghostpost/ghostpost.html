@@ -153,22 +153,22 @@
             const mediumSet = new Set();
 
             data.forEach(entry => {
-                const initials = `${entry["First Initial"] || ""}${entry["Last Initial"] || ""}`;
+                const initials = `${entry["first_initial"] || ""}${entry["last_initial"] || ""}`;
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${initials}</td>
-                    <td>${entry["ZIP Suffix"]}</td>
-                    <td>${entry["Postmark Date"]}</td>
-                    <td>${entry.Medium}</td>
-                    <td>${entry.Notes || ""}</td>
+                    <td>${entry["zip_suffix"]}</td>
+                    <td>${entry["postmark_date"]}</td>
+                    <td>${entry["post_type"]}</td>
+                    <td>${entry["notes"] || ""}</td>
                 `;
                 tbody.appendChild(row);
 
-                if (entry["First Initial"]) firstSet.add(entry["First Initial"]);
-                if (entry["Last Initial"]) lastSet.add(entry["Last Initial"]);
-                zipSet.add(entry["ZIP Suffix"]);
-                dateSet.add(entry["Postmark Date"]);
-                mediumSet.add(entry.Medium);
+                if (entry["first_initial"]) firstSet.add(entry["first_initial"]);
+                if (entry["last_initial"]) lastSet.add(entry["last_initial"]);
+                zipSet.add(entry["zip_suffix"]);
+                dateSet.add(entry["postmark_date"]);
+                mediumSet.add(entry["post_type"]);
             });
 
             populateFilters("filterFirst", firstSet);
