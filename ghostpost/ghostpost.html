@@ -31,7 +31,7 @@
         }
 
         section {
-            max-width: 800px;
+            max-width: 1000px;
             width: 100%;
         }
 
@@ -154,6 +154,12 @@
             const mediumSet = new Set();
 
             data.forEach(entry => {
+                const extras = [];
+                if (entry["no_postmark_signed_date"] === "*") extras.push("*Signed*");
+                if (entry["no_postmark_month_only"]) extras.push(`(Month Only: ${entry["no_postmark_month_only"]})`);
+                if (entry["forwarded_from_huntington_sci"]) extras.push(`(FWD from H-SCI)`);
+                const noteText = [entry["notes"], ...extras].filter(Boolean).join(" ");
+
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${entry["first_initial"] || ""}</td>
@@ -161,7 +167,7 @@
                     <td>${entry["zip_suffix"]}</td>
                     <td>${entry["postmark_date"]}</td>
                     <td>${entry["post_type"]}</td>
-                    <td>${entry["notes"] || ""}</td>
+                    <td>${noteText}</td>
                 `;
                 tbody.appendChild(row);
 
