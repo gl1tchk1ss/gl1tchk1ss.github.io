@@ -137,7 +137,7 @@
         <p>This project is not affiliated with Luigi Mangione, his legal team, or any campaign. It is an archival
             community effort to document postal transparency and support free expression.</p>
 
-        <p><a href="https://github.com/ph1shcr0w/ghostpost" target="_blank">View the GhostPost repository on
+        <p><a href="https://github.com/YOURUSERNAME/ghostpost" target="_blank">View the GhostPost repository on
                 GitHub</a></p>
     </section>
 
@@ -153,9 +153,10 @@
             const mediumSet = new Set();
 
             data.forEach(entry => {
+                const initials = `${entry["First Initial"] || ""}${entry["Last Initial"] || ""}`;
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${entry.Initials}</td>
+                    <td>${initials}</td>
                     <td>${entry["ZIP Suffix"]}</td>
                     <td>${entry["Postmark Date"]}</td>
                     <td>${entry.Medium}</td>
@@ -163,10 +164,8 @@
                 `;
                 tbody.appendChild(row);
 
-                if (entry.Initials && entry.Initials.length === 2) {
-                    firstSet.add(entry.Initials.charAt(0));
-                    lastSet.add(entry.Initials.charAt(1));
-                }
+                if (entry["First Initial"]) firstSet.add(entry["First Initial"]);
+                if (entry["Last Initial"]) lastSet.add(entry["Last Initial"]);
                 zipSet.add(entry["ZIP Suffix"]);
                 dateSet.add(entry["Postmark Date"]);
                 mediumSet.add(entry.Medium);
@@ -202,8 +201,10 @@
                 const cells = row.querySelectorAll("td");
                 const [initials, zip, date, medium] = [cells[0], cells[1], cells[2], cells[3]];
 
-                const firstChar = initials.textContent.charAt(0).toLowerCase();
-                const lastChar = initials.textContent.charAt(1).toLowerCase();
+                const [firstChar, lastChar] = [
+                    initials.textContent.charAt(0).toLowerCase(),
+                    initials.textContent.charAt(1).toLowerCase()
+                ];
 
                 const showRow =
                     (!firstFilter || firstChar === firstFilter) &&
