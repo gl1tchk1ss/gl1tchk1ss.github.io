@@ -116,7 +116,8 @@
         <table id="catalogTable">
             <thead>
                 <tr>
-                    <th>Initials</th>
+                    <th>First Initial</th>
+                    <th>Last Initial</th>
                     <th>ZIP Suffix</th>
                     <th>Postmark Date</th>
                     <th>Medium</th>
@@ -153,10 +154,10 @@
             const mediumSet = new Set();
 
             data.forEach(entry => {
-                const initials = `${entry["first_initial"] || ""}${entry["last_initial"] || ""}`;
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${initials}</td>
+                    <td>${entry["first_initial"] || ""}</td>
+                    <td>${entry["last_initial"] || ""}</td>
                     <td>${entry["zip_suffix"]}</td>
                     <td>${entry["postmark_date"]}</td>
                     <td>${entry["post_type"]}</td>
@@ -199,11 +200,11 @@
 
             rows.forEach(row => {
                 const cells = row.querySelectorAll("td");
-                const [initials, zip, date, medium] = [cells[0], cells[1], cells[2], cells[3]];
+                const [firstCell, lastCell, zip, date, medium] = [cells[0], cells[1], cells[2], cells[3], cells[4]];
 
                 const [firstChar, lastChar] = [
-                    initials.textContent.charAt(0).toLowerCase(),
-                    initials.textContent.charAt(1).toLowerCase()
+                    firstCell.textContent.toLowerCase(),
+                    lastCell.textContent.toLowerCase()
                 ];
 
                 const showRow =
