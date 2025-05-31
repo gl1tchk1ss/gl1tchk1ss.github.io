@@ -87,8 +87,13 @@
         <input type="text" id="searchInput" placeholder="Search entries...">
 
         <div style="margin-bottom: 1rem;">
-            <label>Initials:</label>
-            <select id="filterInitials" onchange="filterTable()">
+            <label>First Initial:</label>
+            <select id="filterFirst" onchange="filterTable()">
+                <option value="">All</option>
+            </select>
+
+            <label>Last Initial:</label>
+            <select id="filterLast" onchange="filterTable()">
                 <option value="">All</option>
             </select>
 
@@ -141,7 +146,8 @@
             const response = await fetch("mangione_mail_catalog.json");
             const data = await response.json();
             const tbody = document.getElementById("catalogBody");
-            const initialsSet = new Set();
+            const firstSet = new Set();
+            const lastSet = new Set();
             const zipSet = new Set();
             const dateSet = new Set();
             const mediumSet = new Set();
@@ -157,13 +163,17 @@
                 `;
                 tbody.appendChild(row);
 
-                initialsSet.add(entry.Initials);
+                if (entry.Initials && entry.Initials.length === 2) {
+                    firstSet.add(entry.Initials.charAt(0));
+                    lastSet.add(entry.Initials.charAt(1));
+                }
                 zipSet.add(entry["ZIP Suffix"]);
                 dateSet.add(entry["Postmark Date"]);
                 mediumSet.add(entry.Medium);
             });
 
-            populateFilters("filterInitials", initialsSet);
+            populateFilters("filterFirst", firstSet);
+            populateFilters("filterLast", lastSet);
             populateFilters("filterZip", zipSet);
             populateFilters("filterDate", dateSet);
             populateFilters("filterMedium", mediumSet);
@@ -180,7 +190,8 @@
         }
 
         function filterTable() {
-            const initialsFilter = document.getElementById("filterInitials").value.toLowerCase();
+            const firstFilter = document.getElementById("filterFirst").value.toLowerCase();
+            const lastFilter = document.getElementById("filterLast").value.toLowerCase();
             const zipFilter = document.getElementById("filterZip").value.toLowerCase();
             const dateFilter = document.getElementById("filterDate").value.toLowerCase();
             const mediumFilter = document.getElementById("filterMedium").value.toLowerCase();
@@ -191,8 +202,12 @@
                 const cells = row.querySelectorAll("td");
                 const [initials, zip, date, medium] = [cells[0], cells[1], cells[2], cells[3]];
 
+                const firstChar = initials.textContent.charAt(0).toLowerCase();
+                const lastChar = initials.textContent.charAt(1).toLowerCase();
+
                 const showRow =
-                    (!initialsFilter || initials.textContent.toLowerCase().includes(initialsFilter)) &&
+                    (!firstFilter || firstChar === firstFilter) &&
+                    (!lastFilter || lastChar === lastFilter) &&
                     (!zipFilter || zip.textContent.toLowerCase().includes(zipFilter)) &&
                     (!dateFilter || date.textContent.toLowerCase().includes(dateFilter)) &&
                     (!mediumFilter || medium.textContent.toLowerCase().includes(mediumFilter));
@@ -220,4 +235,3 @@
 </body>
 
 </html>
-
